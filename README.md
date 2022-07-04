@@ -51,7 +51,8 @@ Using multiproc.sh with socks4 on a vps
    -f        | set proxies file (default:proxy.txt)
    -b        | enable/disable brute mode
              | Enable=1 Disable=0  (default:0)
-   -s        | set tester time(0 to inf, default:inf)
+   -s        | set test time(0 to inf, default:inf)
+   -p		 | set proxy timeout in seconds (default 3)
    -down     | download proxies
    -check    | check proxies
 =====================================================
