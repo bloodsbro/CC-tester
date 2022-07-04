@@ -1,5 +1,5 @@
        /////    /////    /////////////
-      CCCCC/   CCCCC/   | CC-attack |/
+      CCCCC/   CCCCC/   | CC-tester |/
      CC/      CC/       |-----------|/ 
      CC/      CC/       |  Layer 7  |/ 
      CC/////  CC/////   | ddos tool |/ 
