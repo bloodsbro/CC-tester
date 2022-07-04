@@ -88,8 +88,6 @@ out_file = "proxy.txt"
 thread_num = 800
 data = ""
 cookies = ""
-###############################
-strings = "asdfghjklqwertyuiopZXCVBNMQWERTYUIOPASDFGHJKLzxcvbnm1234567890&"
 ###################################################
 Intn = random.randint
 Choice = random.choice
