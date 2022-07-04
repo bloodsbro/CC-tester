@@ -5,8 +5,8 @@
      CC/////  CC/////   | ddos tool |/ 
       CCCCC/   CCCCC/   |___________|/
 
-# CC-attack ![](https://img.shields.io/badge/Version-3.7.1-brightgreen.svg) ![](https://img.shields.io/badge/license-GPLv2-blue.svg)
- A script for using socks4/5 or http proxies to attack http(s) server.
+# CC-tester ![](https://img.shields.io/badge/Version-3.7.1-brightgreen.svg) ![](https://img.shields.io/badge/license-GPLv2-blue.svg)
+ A script for using socks4/5 or http proxies to vulnerability testing http(s) server.
 
  News:
 - [x] Added Support of HTTP proxies
@@ -31,15 +31,15 @@ Using multiproc.sh with socks4 on a vps
 ## Install
 
     pip3 install requests pysocks
-    git clone https://github.com/Leeon123/CC-attack.git
-    cd CC-attack
+    git clone https://github.com/bloodsbro/CC-tester.git
+    cd CC-tester
 
 ## Usage
 
     python3 cc.py <arguments>
 
 ```
-===============  CC-attack help list  ===============
+===============  CC-tester help list  ===============
    -h/help   | showing this message
    -url      | set target url
    -m/mode   | set program mode
@@ -51,7 +51,7 @@ Using multiproc.sh with socks4 on a vps
    -f        | set proxies file (default:proxy.txt)
    -b        | enable/disable brute mode
              | Enable=1 Disable=0  (default:0)
-   -s        | set attack time(default:60)
+   -s        | set tester time(0 to inf, default:inf)
    -down     | download proxies
    -check    | check proxies
 =====================================================
@@ -61,7 +61,7 @@ Download socks5 proxies as proxy.txt:
 ```
 python3 cc.py -down -f proxy.txt -v 5
 ```
-Attack a target with custom proxies list(socks4.txt) for 30 seconds :
+Vulnerability testing a site with custom proxies list(socks4.txt) for 30 seconds :
 ```
 python3 cc.py -url http://target.com -f socks4.txt -v 4 -s 30
 ```
@@ -83,7 +83,7 @@ After that, change the number of process.
 
 At last, change atk_cmd to your command and run the script by "bash multiproc.sh"
 ```
-Example setup of multiproc.sh (-v socks version) (-s attack time)
+Example setup of multiproc.sh (-v socks version) (-s test time)
 ```
 atk_cmd="python3 cc.py -url http://target.com -v 4 -s 60"
 
