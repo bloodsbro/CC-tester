@@ -1,9 +1,4 @@
 #!/usr/bin/python3
-#Coded by L330n123
-#########################################
-#         Just a little change          #
-#                           -- L330n123 #
-#########################################
 import requests
 import socket
 import socks
@@ -32,7 +27,7 @@ Version 3.7.1 (2022/3/24)
 │       Tos: Do not use for bad purposes      │
 │      Use only on your sites for testing     │
 ├─────────────────────────────────────────────┤
-│ Link: https://github.com/Leeon123/CC-tester │
+│ Link: https://github.com/bloodsbro/CC-tester│
 └─────────────────────────────────────────────┘''')
 
 acceptall = [
@@ -378,7 +373,7 @@ def slow(conn,proxy_type):
 '''
 
 nums = 0
-def checking(lines,proxy_type,ms,rlock,):#Proxy checker coded by Leeon123
+def checking(lines,proxy_type,ms,rlock,):
 	global nums
 	global proxies
 	proxy = lines.strip().split(":")
@@ -417,7 +412,7 @@ def checking(lines,proxy_type,ms,rlock,):#Proxy checker coded by Leeon123
 			err +=1
 	nums += 1
 
-def check_socks(ms):#Coded by Leeon123
+def check_socks(ms):
 	global nums
 	thread_list=[]
 	rlock = threading.RLock()
@@ -693,4 +688,4 @@ def main():
 			time.sleep(1)
 
 if __name__ == "__main__":
-	main()#Coded by Leeon123
+	main()
