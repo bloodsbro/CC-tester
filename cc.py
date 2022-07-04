@@ -93,22 +93,11 @@ Intn = random.randint
 Choice = random.choice
 ###################################################
 def build_threads(mode,thread_num,event,proxy_type):
-	if mode == "post":
-		for _ in range(thread_num):
-			th = threading.Thread(target = post,args=(event,proxy_type,))
-			th.daemon = True
-			th.start()
-	elif mode == "cc":
-		for _ in range(thread_num):
-			th = threading.Thread(target = cc,args=(event,proxy_type,))
-			th.daemon = True
-			th.start()
-	elif mode == "head":
-		for _ in range(thread_num):
-			th = threading.Thread(target = head,args=(event,proxy_type,))
-			th.daemon = True
-			th.start()
-			
+    func = globals()[mode]
+    th = threading.Thread(target = func,args=(event,proxy_type,))
+    th.daemon = True
+    th.start()
+
 
 def getuseragent():
 	platform = Choice(['Macintosh', 'Windows', 'X11'])
